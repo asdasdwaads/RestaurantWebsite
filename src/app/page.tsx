@@ -46,7 +46,7 @@ export default function Home() {
           <p className="text-gray-400 text-[0.8rem] smartphone:text-[1rem]">
             Lorem ipsum dolor sit amet consectetur adipisicing elit. Quis saepe eum repellendus earum
             sapiente ex aspernatur architecto non, dolorem inventore? Eaque placeat nulla dignissimos
-            magnam cum veritatis ratione odio adipisci.
+            magnam cum veritatis ration
           </p>
           <p className="text-gray-400 text-[0.8rem] smartphone:text-[1rem]">
             Lorem ipsum dolor sit amet, consectetur adipisicing elit. Porro ut, obcaecati rerum pariatur
