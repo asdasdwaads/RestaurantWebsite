@@ -1,0 +1,90 @@
+{
+  "allMenu": [
+    {
+      "category": "Vorspeise",
+      "menu": [
+        {
+          "path": "/assets/menu/FrenchFires.jpg",
+          "name": "Pommes",
+          "price": "5,90"
+        },
+        {
+          "path": "/assets/menu/Fruhlingsrollen.jpg",
+          "name": "Frühlingsrollen",
+          "price": "5,90"
+        },
+        {
+          "path": "/assets/menu/Gyoza.jpg",
+          "name": "Gyoza",
+          "price": "5,90"
+        },
+        {
+          "path": "/assets/menu/ChickenNugget.jpg",
+          "name": "Chicken Nuggets",
+          "price": "5,90"
+        }
+      ]
+    },
+    {
+      "category": "Hauptspeise",
+      "menu": [
+        {
+          "path": "/assets/menu/Grunes_Curry_mit_Huhn.jpg",
+          "name": "Grünes Curry mit Huhn",
+          "price": "12,90"
+        },
+        {
+          "path": "/assets/menu/Panang_Curry_mit_Huhn.jpg",
+          "name": "Panang Curry mit Huhn",
+          "price": "12,90"
+        },
+        {
+          "path": "/assets/menu/Gebratenes_Fleisch_mit_gelbem_Curry_mit_Huhn.jpg",
+          "name": "Gebratenes Fleisch mit gelbem Curry mit Huhn",
+          "price": "12,90"
+        },
+        {
+          "path": "/assets/menu/Thailandischer_Gebratener_Reis.jpg",
+          "name": "Thailandischer Gebratener Reis",
+          "price": "10,90"
+        },
+        {
+          "path": "/assets/menu/Pad_See_Ew.jpg",
+          "name": "Pad See Ew",
+          "price": "8,90"
+        },
+        {
+          "path": "/assets/menu/Pad_Priew_Wan.jpg",
+          "name": "Pad Priew Wan",
+          "price": "8,90"
+        },
+        {
+          "path": "/assets/menu/Pad_Thai.jpg",
+          "name": "Pad Thai",
+          "price": "12,90"
+        },
+        {
+          "path": "/assets/menu/Pad_Krapao_mit_Huhn.jpg",
+          "name": "Pad Krapao mit Huhn",
+          "price": "12,90"
+        },
+        {
+          "path": "/assets/menu/Gebratener_Reis.jpg",
+          "name": "Gebratener Reis",
+          "price": "8,90"
+        },
+        {
+          "path": "/assets/menu/Huhnchen_mit_Cashewnüssen_auf_Reis.jpg",
+          "name": "Hühnchen mit Cashewnüssen auf Reis",
+          "price": "12,90"
+        }
+      ]
+    }
+  ],
+  "menuPDF": [
+    { "path": "/assets/menu/pdf/menu_English/0001.jpg" },
+    { "path": "/assets/menu/pdf/menu_English/0002.jpg" },
+    { "path": "/assets/menu/pdf/menu_English/0003.jpg" },
+    { "path": "/assets/menu/pdf/menu_English/0004.jpg" }
+  ]
+}

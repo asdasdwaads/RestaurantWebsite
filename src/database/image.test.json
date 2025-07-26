@@ -1,0 +1,9 @@
+{
+  "home": [
+    { "path": "/assets/home/slider_1.jpg" },
+    { "path": "/assets/home/slider_2.jpg" },
+    { "path": "/assets/home/slider_3.jpg" },
+    { "path": "/assets/home/slider_4.jpg" },
+    { "path": "/assets/home/slider_5.jpg" }
+  ]
+}
