@@ -1,7 +1,7 @@
-import { EmailProps } from "@/interfaces/email";
+import { ContactProps } from "@/interfaces/email";
 import { baseURL } from "./api";
 
-export const sendEmail = async (emailForm: EmailProps | undefined) => {
+export const sendEmail = async (emailForm: ContactProps | undefined) => {
   try {
     const res = await fetch(`${baseURL}/api/contact`, {
       method: "POST",

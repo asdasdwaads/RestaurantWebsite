@@ -1,19 +1,19 @@
 "use client"
 
 import { motion } from "motion/react";
+import Image from "next/image";
 import { useState, useEffect } from "react";
 import { IoIosArrowBack, IoIosArrowForward } from "react-icons/io";
 
 export const SliderImage = (props: { images: Array<{ path: string }> }) => {
 
-  const len = props.images.length - 1;
   const [currentIndex, setCurrentIndex] = useState(0);
 
-  const prevSlide = () => setCurrentIndex(currentIndex === 0 ? len : currentIndex - 1);
-  const nextSlide = () => setCurrentIndex(currentIndex === len ? 0 : currentIndex + 1);
+  const prevSlide = () => setCurrentIndex(currentIndex === 0 ? props.images.length - 1 : currentIndex - 1);
+  const nextSlide = () => setCurrentIndex(currentIndex === props.images.length - 1 ? 0 : currentIndex + 1);
   
   useEffect(() => {
-    const slideInterval = setInterval(nextSlide, 5000);
+    const slideInterval = setInterval(nextSlide, 4 * 1000);
     return () => clearInterval(slideInterval);
   }, [currentIndex]);
 
@@ -31,20 +31,21 @@ export const SliderImage = (props: { images: Array<{ path: string }> }) => {
             }
           }}
         >
-          <img
+          <Image
             src={image.path}
             alt="Not Found Image"
             className="h-full w-full object-cover"
+            fill
           />
         </motion.div>
       ))}
       <div className="absolute left-0 h-full flex items-center justify-center px-4">
-        <div onClick={prevSlide} className="text-[3rem] p-1 y-tablet:p-2 cursor-pointer rounded-full hover:bg-[#ffffff60] hover:shadow-2xl duration-300"><IoIosArrowBack /></div>
+        <span onClick={prevSlide} className="text-[3rem] p-1 y-tablet:p-2 cursor-pointer rounded-full hover:bg-[#ffffff60] hover:shadow-2xl duration-300"><IoIosArrowBack /></span>
       </div>
       <div className="absolute right-0 h-full flex items-center justify-center px-4">
-        <div onClick={nextSlide} className="text-[3rem] p-1 y-tablet:p-2 cursor-pointer rounded-full hover:bg-[#ffffff60] hover:shadow-2xl duration-300"><IoIosArrowForward /></div>
+        <span onClick={nextSlide} className="text-[3rem] p-1 y-tablet:p-2 cursor-pointer rounded-full hover:bg-[#ffffff60] hover:shadow-2xl duration-300"><IoIosArrowForward /></span>
       </div>
-      <div className="absolute flex w-screen justify-center bottom-[2rem] gap-5 z-5">
+      <span className="absolute flex w-screen justify-center bottom-[2rem] gap-5 z-5">
         {props.images?.map((_, index) => (
           <motion.div
             key={index}
@@ -54,7 +55,7 @@ export const SliderImage = (props: { images: Array<{ path: string }> }) => {
             onClick={() => setCurrentIndex(index)}
           />
         ))}
-      </div>
+      </span>
     </div>
   );
 }

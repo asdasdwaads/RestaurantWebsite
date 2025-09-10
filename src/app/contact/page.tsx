@@ -1,13 +1,14 @@
 "use client"
 
 import { BookContainer as ContactContainer } from "@/components/BookComponents";
-import { EmailProps } from "@/interfaces/email";
+import { ContactProps } from "@/interfaces/email";
 import { sendEmail } from "@/lib/contact";
+import Image from "next/image";
 import { ChangeEvent, FormEvent, useState } from "react";
 
 export default function Contact() {
 
-  const [form, setForm] = useState<EmailProps>();
+  const [form, setForm] = useState<ContactProps>();
 
   const handleOnChange = (event: ChangeEvent<HTMLTextAreaElement | HTMLInputElement>) => {
     setForm({
@@ -16,17 +17,19 @@ export default function Contact() {
     });
   }
 
-  const handleSendEmail = (event: FormEvent) => {
+  const handleSendEmail = async (event: FormEvent) => {
     event.preventDefault()
-    sendEmail(form);
+    const res = await sendEmail(form);
+    console.log(res);
   }
 
   return (
     <div className="relative">
-      <img
+      <Image
         src="/assets/contact/bg.jpeg"
         alt="Not found image"
-        className="absolute w-full h-full"
+        className="absolute h-full object-cover"
+        fill
       />
       <div className="relative flex flex-wrap-reverse justify-center gap-5 py-10 bg-[#00000091]">
         <div className="w-[300px] smartphone:w-[400px] y-tablet:w-[500px] h-[60vh] smartphone:h-[80vh]">

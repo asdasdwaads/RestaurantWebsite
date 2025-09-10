@@ -34,6 +34,7 @@ export default function Home() {
           <img
             className="p-5 smartphone:p-10 shadow-lg"
             src="/assets/home/Thai-poster.jpg"
+            alt="Not found Image"
           />
           <div className="absolute flex items-center top-0 w-full h-full">
             <h1 className="mix-blend-screen font-bold text-center bg-white text-[1.2rem] y-tablet:text-[3rem] h-fit w-full p-1 smartphone:p-[1rem]">

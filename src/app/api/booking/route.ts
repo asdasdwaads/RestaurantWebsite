@@ -1,4 +1,4 @@
-import { NextRequest, NextResponse } from "next/server";
+import { NextResponse, NextRequest } from "next/server";
 import nodemailer from "nodemailer";
 
 export const POST = async (req: NextRequest) => {
