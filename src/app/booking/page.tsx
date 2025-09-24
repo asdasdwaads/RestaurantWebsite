@@ -18,6 +18,7 @@ export default function Booking() {
   ];
 
   const [form, setForm] = useState<BookingProps>();
+  const [token, setToken] = useState<string | null>(null);
 
   const handleOnChange = (event: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     setForm({
@@ -26,8 +27,10 @@ export default function Booking() {
     });
   }
 
-  const handleSubmit = async (event: FormEvent) => {
+  const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
+    const formData = new FormData(event.currentTarget);
+    formData.append("cf-turnstile-response", token || "");
     const res = await sendEmail(form);
     console.log(res);
   }
@@ -69,6 +72,7 @@ export default function Booking() {
             </div>
           </BookContainer>
           <BookContainer
+            onSubmit={handleSubmit}
             title="Order Details"
             styles={{
               container: "w-[300px] smartphone:w-[400px] y-tablet:w-[500px] justify-between",
@@ -99,7 +103,18 @@ export default function Booking() {
                 </div>
               ))}
             </div>
-            <button onClick={handleSubmit} className="text-white bg-dark-green py-2 rounded-[10px] cursor-pointer" type="submit">Order now</button>
+            {/* Turnstile */}
+            <div
+              className="cf-turnstile"
+              data-sitekey={process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY}
+              data-callback={(token: string) => setToken(token)}
+            ></div>
+            <button className="text-white bg-dark-green py-2 rounded-[10px] cursor-pointer" type="submit">Order now</button>
+            <script
+              src="https://challenges.cloudflare.com/turnstile/v0/api.js"
+              async
+              defer
+            ></script>  
           </BookContainer>
         </div>
         <div className="flex items-center py-8 y-tablet:py-16">

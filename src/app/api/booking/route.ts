@@ -3,6 +3,32 @@ import nodemailer from "nodemailer";
 
 export const POST = async (req: NextRequest) => {
   const { name, email, subject, message } = await req.json();
+
+  const formData = await req.formData();
+  const token = formData.get("cf-turnstile-response") as string;
+
+  const secret = process.env.TURNSTILE_SECRET_KEY!;
+
+  const verifyRes = await fetch(
+    "https://challenges.cloudflare.com/turnstile/v0/siteverify",
+    {
+      method: "POST",
+      headers: { "Content-Type": "application/x-www-form-urlencoded" },
+      body: `secret=${encodeURIComponent(secret)}&response=${encodeURIComponent(
+        token
+      )}`,
+    }
+  );
+
+  const outcome = await verifyRes.json();
+
+  if (!outcome.success) {
+    return NextResponse.json(
+      { message: "Captcha verification failed" },
+      { status: 400 }
+    );
+  }
+
   const transporter = nodemailer.createTransport({
     service: "gmail",
     auth: {
@@ -25,8 +51,6 @@ export const POST = async (req: NextRequest) => {
       <p><strong>Message:</strong><br>${message.replace(/\n/g, "<br>")}</p>
     `,
   };
-
-  console.log("Receiver Email:", process.env.EMAIL_RECEIVER);
 
   try {
     await transporter.sendMail(mailOptions);

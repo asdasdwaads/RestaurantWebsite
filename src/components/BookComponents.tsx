@@ -10,7 +10,7 @@ export const BookContainer = ({
     title?: string, 
     children?: string
   },
-  onSubmit?: (event: FormEvent) => void
+  onSubmit?: (event: FormEvent<HTMLFormElement>) => void
 }) => {
   return (
     <div className={`${styles?.container} flex flex-col items-center gap-4 border-2 border-dark rounded-[10px] p-6 bg-[#0000005d]`}>
