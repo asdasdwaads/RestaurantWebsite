@@ -18,7 +18,7 @@ export const SliderImage = (props: { images: Array<{ path: string }> }) => {
   }, [currentIndex]);
 
   return (
-    <div className="relative flex overflow-hidden h-[300px] y-tablet:h-[400px] x-tablet:h-[700px]">
+    <div className="relative flex overflow-hidden h-[300px] y-tablet:h-[400px] x-tablet:h-[450px]">
       {props.images?.map((image, index) => (
         <motion.div
           key={index}
@@ -31,11 +31,10 @@ export const SliderImage = (props: { images: Array<{ path: string }> }) => {
             }
           }}
         >
-          <Image
+          <img
             src={image.path}
             alt="Not Found Image"
             className="h-full w-full object-cover"
-            fill
           />
         </motion.div>
       ))}

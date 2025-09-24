@@ -11,7 +11,7 @@ import { getImage } from "@/lib/image";
 
 export default function Home() {
 
-  const [images, setImages] = useState<{home: Array<{ path: string }>}>({ home: [] });
+  const [images, setImages] = useState<{ home: Array<{ path: string }> }>({ home: [] });
 
   const services = [
     { label: "delivery", desc: "Join us for a meal to remember—reserve your spot!", icon: <FaTruck />, path: "/" },
@@ -45,16 +45,15 @@ export default function Home() {
         <div className="pt-5 y-tablet:p-[4rem] grid gap-4">
           <h1 className="smartphone:text-[2rem] font-bold">why choose us?</h1>
           <p className="text-gray-400 text-[0.8rem] smartphone:text-[1rem]">
-            Lorem ipsum dolor sit amet consectetur adipisicing elit. Quis saepe eum repellendus earum
-            sapiente ex aspernatur architecto non, dolorem inventore? Eaque placeat nulla dignissimos
-            magnam cum veritatis ration
+            Entdecke die Aromen Thailands in Leoben
           </p>
           <p className="text-gray-400 text-[0.8rem] smartphone:text-[1rem]">
-            Lorem ipsum dolor sit amet, consectetur adipisicing elit. Porro ut, obcaecati rerum pariatur
-            minima omnis dignissimos asperiores doloremque deleniti itaque, tenetur impedit doloribus
-            voluptatibus consequuntur harum cumque? Aliquam at dicta a, rem explicabo molestias qui
-            impedit distinctio, minus nobis dolore possimus excepturi reprehenderit. Voluptas aut, optio
-            explicabo incidunt ullam ea.
+            Thailändisches Essen ist bekannt für seine Vielfalt an Aromen und die perfekte Balance zwischen süß,
+            sauer, salzig und scharf. Typische Zutaten wie frische Kräuter, Kokosmilch, Zitronengras und Chili
+            verleihen den Gerichten ihren einzigartigen Geschmack. Beliebte Speisen wie Pad Thai, grüne Currys oder
+            Tom Yum Suppe sind nicht nur köstlich, sondern auch leicht und gesund. Für Österreicherinnen und Österreicher
+            bietet die thailändische Küche eine spannende Abwechslung zu traditionellen Gerichten – und bald gibt es diese
+            authentischen Spezialitäten auch direkt in Leoben zu genießen.
           </p>
         </div>
       </div>
