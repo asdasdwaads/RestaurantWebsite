@@ -105,7 +105,7 @@ export default function Booking() {
             </div>
             {/* Turnstile */}
             <div
-              className="cf-turnstile"
+              className="cf-turnstile m-auto"
               data-sitekey={process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY}
               data-callback={(token: string) => setToken(token)}
             ></div>
