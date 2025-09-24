@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { FaFacebook, FaInstagram } from "react-icons/fa";
-import { FaXTwitter, FaWhatsapp } from "react-icons/fa6";
+import { FaWhatsapp } from "react-icons/fa6";
 
 export const Footer = () => {
 
