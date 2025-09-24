@@ -9,6 +9,7 @@ import { ChangeEvent, FormEvent, useState } from "react";
 export default function Contact() {
 
   const [form, setForm] = useState<ContactProps>();
+  const [token, setToken] = useState<string | null>(null);
 
   const handleOnChange = (event: ChangeEvent<HTMLTextAreaElement | HTMLInputElement>) => {
     setForm({
@@ -17,8 +18,10 @@ export default function Contact() {
     });
   }
 
-  const handleSendEmail = async (event: FormEvent) => {
+  const handleSendEmail = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault()
+    const formData = new FormData(event.currentTarget);
+    formData.append("cf-turnstile-response", token || "");
     const res = await sendEmail(form);
     console.log(res);
   }
@@ -45,7 +48,18 @@ export default function Contact() {
             <input type="email" name="email" className="bg-white w-full h-[40px] rounded-[10px] px-2" placeholder="Email" onChange={handleOnChange} />
             <input type="text" name="subject" className="bg-white w-full h-[40px] rounded-[10px] px-2" placeholder="Subject" onChange={handleOnChange} />
             <textarea name="message" className="bg-white rounded-[10px] p-2 resize-none overflow-auto h-[250px]" placeholder="Message" onChange={handleOnChange}></textarea>
+            {/* Turnstile */}
+            <div
+              className="cf-turnstile m-auto"
+              data-sitekey={process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY}
+              data-callback={(token: string) => setToken(token)}
+            ></div>
             <button className="text-white bg-dark-green py-2 rounded-[10px] cursor-pointer w-full pb-2" type="submit">Send Message</button>
+            <script
+              src="https://challenges.cloudflare.com/turnstile/v0/api.js"
+              async
+              defer
+            ></script>
           </ContactContainer>
         </div>
       </div>
