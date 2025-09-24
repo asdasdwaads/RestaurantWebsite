@@ -1,7 +1,6 @@
 "use client"
 
 import { motion } from "motion/react";
-import Image from "next/image";
 import { useState, useEffect } from "react";
 import { IoIosArrowBack, IoIosArrowForward } from "react-icons/io";
 
