@@ -91,10 +91,9 @@ export default function Booking() {
                 <div className="flex items-center gap-1 w-full" key={index}>
                   <input
                     type="radio"
-                    name={service.id}
+                    name="service"
                     id={service.id}
                     value={service.label}
-                    radioGroup="check"
                     onChange={handleOnChange}
                     required
                     className="appearance-none border-2 min-w-5 min-h-5 rounded-full checked:bg-emerald-400 duration-300"
