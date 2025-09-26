@@ -53,6 +53,7 @@ export default function Contact() {
               className="cf-turnstile m-auto"
               data-sitekey={process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY}
               data-callback={(token: string) => setToken(token)}
+              data-appearance="always"
             ></div>
             <button className="text-white bg-dark-green py-2 rounded-[10px] cursor-pointer w-full pb-2" type="submit">Send Message</button>
             <script
