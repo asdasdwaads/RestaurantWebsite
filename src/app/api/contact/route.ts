@@ -2,10 +2,13 @@ import { NextRequest, NextResponse } from "next/server";
 import nodemailer from "nodemailer";
 
 export const POST = async (req: NextRequest) => {
-  const { name, email, subject, message } = await req.json();
-
   const formData = await req.formData();
+
   const token = formData.get("cf-turnstile-response") as string;
+  const email = formData.get("email") as string;
+  const message = formData.get("message") as string;
+  const name = formData.get("name") as string;
+  const subject = formData.get("subject") as string;
 
   const secret = process.env.TURNSTILE_SECRET_KEY!;
 
@@ -56,11 +59,11 @@ export const POST = async (req: NextRequest) => {
 
   try {
     await transporter.sendMail(mailOptions);
-    return NextResponse.json({ success: true }, { status: 200 });
+    return NextResponse.json({ success: true, message: "Email sent successfully!" }, { status: 201 });
   } catch (error) {
     console.error("Error sending email:", error);
     return NextResponse.json(
-      { success: false, error: "Failed to send email" },
+      { success: false, message: "Failed to send email" },
       { status: 500 }
     );
   }

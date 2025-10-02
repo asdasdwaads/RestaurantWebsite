@@ -1,25 +1,23 @@
 import { ContactProps } from "@/interfaces/email";
 import { baseURL } from "./api";
+import axios from "axios";
 
 export const sendEmail = async (emailForm: ContactProps | undefined) => {
   try {
-    const res = await fetch(`${baseURL}/api/contact`, {
-      method: "POST",
-      headers: { 
-        "Content-Type": "application/json"
-      },
-      body: JSON.stringify({ 
-        name: emailForm?.name,
-        email: emailForm?.email,
-        subject: emailForm?.subject, 
-        message: emailForm?.message 
-      }),
-    });
 
-    if (res.ok) {
-      alert("Email sent successfully!");
+    const formData = new FormData();
+
+    formData.append("email", emailForm?.email as string);
+    formData.append("message", emailForm?.message as string);
+    formData.append("name", emailForm?.name as string);
+    formData.append("subject", emailForm?.subject as string);
+
+    const res = await axios.post(`${baseURL}/api/contact`, formData);
+
+    if (res.data.success) {
+      alert(res.data.message);
     } else {
-      alert("Failed to send email.");
+      alert(res.data.message);
     }
 
   } catch (error) {

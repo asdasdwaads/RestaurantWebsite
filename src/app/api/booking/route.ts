@@ -2,10 +2,16 @@ import { NextResponse, NextRequest } from "next/server";
 import nodemailer from "nodemailer";
 
 export const POST = async (req: NextRequest) => {
-  const { name, email, subject, message } = await req.json();
-
   const formData = await req.formData();
+
   const token = formData.get("cf-turnstile-response") as string;
+  const date = formData.get("date") as string;
+  const name = formData.get("name") as string;
+  const email = formData.get("email") as string;
+  const phone = formData.get("phone") as string;
+  const count = formData.get("contact") as string;
+  const order = formData.get("order") as string;
+  const type = formData.get("type") as string;
 
   const secret = process.env.TURNSTILE_SECRET_KEY!;
 
@@ -41,24 +47,27 @@ export const POST = async (req: NextRequest) => {
     from: `"Feedback Bot" <${process.env.EMAIL_USER}>`,
     to: process.env.EMAIL_RECEIVER,
     replyTo: email,
-    subject: `New Feedback: ${subject}`,
-    text: `You received a new feedback:\n\nFrom: ${name}\nEmail: ${email}\nSubject: ${subject}\nMessage:\n${message}`,
+    subject: `New Order: ${name}`,
+    text: `You received a new feedback:\n\nFrom: ${name}\nEmail: ${email}\nSubject: ${phone}\nMessage:\n${order}`,
     html: `
-      <h2>New Feedback Received</h2>
+      <h2>New Orders</h2>
       <p><strong>From:</strong> ${name}</p>
       <p><strong>Email:</strong> ${email}</p>
-      <p><strong>Subject:</strong> ${subject}</p>
-      <p><strong>Message:</strong><br>${message.replace(/\n/g, "<br>")}</p>
+      <p><strong>Phone:</strong> ${phone}</p>
+      <p><strong>Count:</strong> ${count}</p>
+      <p><strong>Date:</strong> ${date}</p>
+      <p><strong>Type:</strong> ${type}</p>
+      <p><strong>Order:</strong><br>${order.replace(/\n/g, "<br>")}</p>
     `,
   };
 
   try {
     await transporter.sendMail(mailOptions);
-    return NextResponse.json({ success: true }, { status: 200 });
+    return NextResponse.json({ success: true, message: "Email sent successfully!" }, { status: 201 });
   } catch (error) {
     console.error("Error sending email:", error);
     return NextResponse.json(
-      { success: false, error: "Failed to send email" },
+      { success: false, message: "Failed to send email" },
       { status: 500 }
     );
   }
