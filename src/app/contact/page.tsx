@@ -1,7 +1,7 @@
 "use client";
 
 import Script from "next/script";
-import { ChangeEvent, FormEvent, useEffect, useState } from "react";
+import { ChangeEvent, FormEvent, useEffect, useState, useRef } from "react";
 import Image from "next/image";
 import { BookContainer as ContactContainer } from "@/components/BookComponents";
 
@@ -16,6 +16,21 @@ declare global {
   interface Window {
     onTurnstileContact?: (token: string) => void;
     __TURNSTILE_CONTACT_TOKEN__?: string;
+
+  
+    turnstile?: {
+      render: (el: HTMLElement, opts: {
+        sitekey: string;
+        callback: (token: string) => void;
+        appearance?: "always" | "execute" | "interaction-only";
+        "refresh-expired"?: "auto" | "manual";
+      }) => string;   // widgetId
+      reset: (id?: string) => void;
+      remove: (id: string) => void;
+    };
+
+    // onload สำหรับ explicit render ของ contact
+    __loadTurnstileContact__?: () => void;
   }
 }
 
@@ -25,6 +40,8 @@ const ENABLE_TURNSTILE =
   process.env.NEXT_PUBLIC_TURNSTILE_ENABLE !== "0";
 
 export default function Contact() {
+  const widgetRootRef = useRef<HTMLDivElement | null>(null);
+  const widgetIdRef = useRef<string | null>(null);
   const [form, setForm] = useState<ContactProps>({});
   const [token, setToken] = useState<string | null>(null);
   const [submitting, setSubmitting] = useState(false);
@@ -93,6 +110,30 @@ export default function Contact() {
     return () => window.removeEventListener(EVENT_NAME, onTokenEvt as EventListener);
   }, []);
 
+  useEffect(() => {
+    if (!ENABLE_TURNSTILE) return;
+
+    // ถ้า script โหลดแล้วจากหน้าอื่น ให้ render ได้ทันที
+    window.__loadTurnstileContact__?.();
+
+    const el = widgetRootRef.current;
+    if (el) {
+      const id = el.getAttribute("data-widget-id");
+      if (id) widgetIdRef.current = id;
+    }
+
+    return () => {
+      const id = widgetIdRef.current;
+      if (id && window.turnstile?.remove) {
+        try { window.turnstile.remove(id); } catch { /* no-op */ }
+        widgetIdRef.current = null;
+      }
+      if (el) {
+        el.removeAttribute("data-rendered");
+        el.removeAttribute("data-widget-id");
+      }
+    };
+  }, []);
   return (
     <div className="relative">
       <Image
@@ -158,29 +199,53 @@ export default function Contact() {
             {/* Turnstile: แสดงเมื่อเปิดใช้ */}
             {ENABLE_TURNSTILE && (
               <>
-                {/* ประกาศ callback ก่อนโหลด script */}
-                  <Script id="turnstile-callback-contact" strategy="afterInteractive">
-                    {`
-                      (function () {
-                        window.onTurnstileContact = function (t) {
-                          if (typeof t === "string" && t.length > 0) {
-                            window.__TURNSTILE_CONTACT_TOKEN__ = t;
-                            window.dispatchEvent(new CustomEvent("turnstile-token:contact", { detail: t }));
-                          }
-                        };
-                      })();
-                    `}
-                  </Script>
-                <div
-                  className="cf-turnstile m-auto"
-                  data-sitekey={process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY_CONTACT}
-                  data-callback="onTurnstileContact"
-                  data-appearance="always"
-                ></div>
+                {/* (A) callback ของหน้า contact */}
+                <Script id="turnstile-callback-contact" strategy="afterInteractive">
+                  {`
+                    (function () {
+                      window.onTurnstileContact = function (t) {
+                        if (typeof t === "string" && t.length > 0) {
+                          window.__TURNSTILE_CONTACT_TOKEN__ = t;
+                          window.dispatchEvent(new CustomEvent("turnstile-token:contact", { detail: t }));
+                        }
+                      };
+                    })();
+                  `}
+                </Script>
+
+                {/* (B) onload สำหรับ explicit render ของ contact */}
+                <Script id="turnstile-onload-contact" strategy="afterInteractive">
+                  {`
+                    (function () {
+                      window.__loadTurnstileContact__ = function () {
+                        try {
+                          var root = document.getElementById("turnstile-contact-root");
+                          if (!root || !window.turnstile) return;
+                          if (root.getAttribute("data-rendered") === "1") return;
+
+                          var id = window.turnstile.render(root, {
+                            sitekey: "${process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY_CONTACT ?? ""}",
+                            callback: function (t) { window.onTurnstileContact && window.onTurnstileContact(t); },
+                            appearance: "always",
+                            "refresh-expired": "auto"
+                          });
+                          root.setAttribute("data-rendered", "1");
+                          root.setAttribute("data-widget-id", id);
+                        } catch (e) { /* no-op */ }
+                      };
+                    })();
+                  `}
+                </Script>
+
+                {/* (C) โหลดสคริปต์ Turnstile แบบ explicit */}
                 <Script
-                  src="https://challenges.cloudflare.com/turnstile/v0/api.js"
+                  src="https://challenges.cloudflare.com/turnstile/v0/api.js?onload=__loadTurnstileContact__&render=explicit"
                   strategy="afterInteractive"
                 />
+
+                {/* Root สำหรับวาง widget (ไม่มี data-callback/auto อีกแล้ว) */}
+                <div id="turnstile-contact-root" ref={widgetRootRef} className="cf-turnstile m-auto" />
+
               </>
             )}
 

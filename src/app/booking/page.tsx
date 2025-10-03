@@ -2,11 +2,12 @@
 
 import Script from "next/script";
 import Link from "next/link";
-import { ChangeEvent, FormEvent, useEffect, useState } from "react";
+import { ChangeEvent, FormEvent, useEffect, useState, useRef } from "react";
 
 import { BookContainer } from "@/components/BookComponents";
 import { MenuPDF } from "@/components/MenuComponents";
 import menu from "@/database/menu.test.json";
+
 
 type FormShape = {
   date?: string;
@@ -21,6 +22,21 @@ declare global {
   interface Window {
     onTurnstileBooking?: (token: string) => void;
     __TURNSTILE_BOOKING_TOKEN__?: string;
+
+
+    turnstile?: {
+      render: (el: HTMLElement, opts: {
+        sitekey: string;
+        callback: (token: string) => void;
+        appearance?: "always" | "execute" | "interaction-only";
+        "refresh-expired"?: "auto" | "manual";
+      }) => string; // widgetId
+      reset: (id?: string) => void;
+      remove: (id: string) => void;
+    };
+
+
+    __loadTurnstileBooking__?: () => void;
   }
 }
 
@@ -31,6 +47,8 @@ const ENABLE_TURNSTILE =
   process.env.NEXT_PUBLIC_TURNSTILE_ENABLE !== "0";
 
 export default function Booking() {
+  const widgetRootRef = useRef<HTMLDivElement | null>(null);
+  const widgetIdRef = useRef<string | null>(null);
   const services = [
     { label: "Eat at restaurant", htmlFor: "restaurant", id: "restaurant" },
     { label: "Take away", htmlFor: "house", id: "house" },
@@ -94,26 +112,56 @@ export default function Booking() {
       setSubmitting(false);
     }
   };
+  useEffect(() => {
+  if (!ENABLE_TURNSTILE) return;
+
+  const onTokenEvt = (e: Event) => {
+    const ce = e as CustomEvent<string>;
+    const detail = typeof ce.detail === "string" ? ce.detail : "";
+    setToken(detail || null);
+  };
+
+  const EVENT_NAME = "turnstile-token:booking";
+  window.addEventListener(EVENT_NAME, onTokenEvt as EventListener);
+
+  // รองรับเคสที่ token มาถึงก่อน mount
+  if (typeof window.__TURNSTILE_BOOKING_TOKEN__ === "string") {
+    setToken(window.__TURNSTILE_BOOKING_TOKEN__ || null);
+  }
+
+  return () => {
+    window.removeEventListener(EVENT_NAME, onTokenEvt as EventListener);
+  };
+}, []);
 
   // รับ token จาก callback (กัน race ด้วยการประกาศ callback ก่อนโหลด script)
   useEffect(() => {
     if (!ENABLE_TURNSTILE) return;
 
-    function onTokenEvt(e: Event) {
-      const ce = e as TurnstileTokenEvent;
-      const detail = typeof ce.detail === "string" ? ce.detail : "";
-      setToken(detail || null);
+    
+    window.__loadTurnstileBooking__?.();
+
+    
+    const el = widgetRootRef.current;
+    if (el) {
+      const id = el.getAttribute("data-widget-id");
+      if (id) widgetIdRef.current = id;
     }
 
-    const EVENT_NAME = "turnstile-token:booking";
-    window.addEventListener(EVENT_NAME, onTokenEvt as EventListener);
-
-    // เผื่อ callback มาก่อน mount
-    if (typeof window.__TURNSTILE_BOOKING_TOKEN__ === "string") {
-      setToken(window.__TURNSTILE_BOOKING_TOKEN__ || null);
-    }
-    return () => window.removeEventListener(EVENT_NAME, onTokenEvt as EventListener);
-  }, []);
+    
+    return () => {
+      const id = widgetIdRef.current;
+      if (id && window.turnstile?.remove) {
+        try { window.turnstile.remove(id); } catch { /* no-op */ }
+        widgetIdRef.current = null;
+      }
+      
+      if (el) {
+        el.removeAttribute("data-rendered");
+        el.removeAttribute("data-widget-id");
+      }
+    };
+}, []);
 
   return (
     <div className="relative">
@@ -260,17 +308,39 @@ export default function Booking() {
                     `}
                 </Script>
 
+                <Script id="turnstile-onload-booking" strategy="afterInteractive">
+                  {`
+                    (function () {
+                      window.__loadTurnstileBooking__ = function () {
+                        try {
+                          var root = document.getElementById("turnstile-booking-root");
+                          if (!root || !window.turnstile) return;
+                          // กัน render ซ้ำตอนกลับเข้าหน้า
+                          if (root.getAttribute("data-rendered") === "1") return;
+
+                          var id = window.turnstile.render(root, {
+                            sitekey: "${process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY_BOOKING ?? ""}",
+                            callback: function (t) { window.onTurnstileBooking && window.onTurnstileBooking(t); },
+                            appearance: "always",
+                            "refresh-expired": "auto"
+                          });
+                          root.setAttribute("data-rendered", "1");
+                          root.setAttribute("data-widget-id", id);
+                        } catch (e) { /* no-op */ }
+                      };
+                    })();
+                  `}
+                </Script>
                 {/* widget */}
                 <div
+                  id="turnstile-booking-root"
+                  ref={widgetRootRef}
                   className="cf-turnstile m-auto"
-                  data-sitekey={process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY_BOOKING}
-                  data-callback="onTurnstileBooking"
-                  data-appearance="always"
-                ></div>
+                />
 
                 {/* script ของ Cloudflare */}
                 <Script
-                  src="https://challenges.cloudflare.com/turnstile/v0/api.js"
+                  src="https://challenges.cloudflare.com/turnstile/v0/api.js?onload=__loadTurnstileBooking__&render=explicit"
                   strategy="afterInteractive"
                 />
               </>
