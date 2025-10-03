@@ -1,9 +1,7 @@
 "use client";
 
-import Script from "next/script";
 import Link from "next/link";
-import { ChangeEvent, FormEvent, useEffect, useState } from "react";
-
+import { ChangeEvent, FormEvent, useEffect, useRef, useState } from "react";
 import { BookContainer } from "@/components/BookComponents";
 import { MenuPDF } from "@/components/MenuComponents";
 import menu from "@/database/menu.test.json";
@@ -18,10 +16,9 @@ type FormShape = {
   service?: string;
 };
 
-// เปิด/ปิด Turnstile จาก env (dev ปิด, prod เปิด)
+const SITE_KEY = process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY_BOOKING!;
 const ENABLE_TURNSTILE =
-  !!process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY_BOOKING &&
-  process.env.NEXT_PUBLIC_TURNSTILE_ENABLE !== "0";
+  !!SITE_KEY && process.env.NEXT_PUBLIC_TURNSTILE_ENABLE !== "0";
 
 export default function Booking() {
   const services = [
@@ -31,9 +28,27 @@ export default function Booking() {
   ];
 
   const [form, setForm] = useState<FormShape>({});
-  const [token, setToken] = useState<string | null>(null);
   const [submitting, setSubmitting] = useState(false);
   const [message, setMessage] = useState<string | null>(null);
+
+  const formRef = useRef<HTMLFormElement>(null);
+
+  // ตั้ง callback เฉพาะหน้า Booking และเขียน token ลง hidden input
+  useEffect(() => {
+    if (!ENABLE_TURNSTILE) return;
+    (window as any).onTurnstileBooking = (t: string) => {
+      const inp = formRef.current?.querySelector<HTMLInputElement>(
+        'input[name="cf-turnstile-response"]'
+      );
+      if (inp) inp.value = t;
+    };
+    return () => {
+      const inp = formRef.current?.querySelector<HTMLInputElement>(
+        'input[name="cf-turnstile-response"]'
+      );
+      if (inp) inp.value = "";
+    };
+  }, []);
 
   const handleOnChange = (
     event: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
@@ -52,9 +67,14 @@ export default function Booking() {
     try {
       const fd = new FormData(event.currentTarget);
 
-      // แนบ token เฉพาะตอนเปิดใช้ Turnstile
-      if (ENABLE_TURNSTILE && token) {
-        fd.set("cf-turnstile-response", token);
+      // ยืนยันว่ามี token ถ้าเปิดใช้
+      if (ENABLE_TURNSTILE) {
+        const token = (fd.get("cf-turnstile-response") as string) || "";
+        if (!token) {
+          setMessage("Please complete the CAPTCHA.");
+          setSubmitting(false);
+          return;
+        }
       }
 
       const res = await fetch("/api/booking", {
@@ -65,16 +85,12 @@ export default function Booking() {
       if (!res.ok) throw new Error(data?.message || "Failed");
 
       setMessage("Order sent! Thank you.");
-      setForm({}); // reset state
-
-      // reset input values (ให้ input ผูกกับ state อยู่แล้วจะเคลียร์เอง)
-      // reset turnstile ถ้าเปิดใช้
-      if (ENABLE_TURNSTILE) {
-        try {
-          if (window.turnstile?.reset) window.turnstile.reset();
-          setToken(null);
-        } catch {}
-      }
+      setForm({});
+      // รีเซ็ต token ที่ hidden input (ตัว widget จะรีเฟรชเอง)
+      const inp = formRef.current?.querySelector<HTMLInputElement>(
+        'input[name="cf-turnstile-response"]'
+      );
+      if (inp) inp.value = "";
     } catch (err) {
       const errorMessage =
         err instanceof Error
@@ -87,23 +103,6 @@ export default function Booking() {
       setSubmitting(false);
     }
   };
-
-  // รับ token จาก callback (กัน race ด้วยการประกาศ callback ก่อนโหลด script)
-  useEffect(() => {
-    if (!ENABLE_TURNSTILE) return;
-
-    function onTokenEvt(e: Event) {
-      const detail = (e as CustomEvent<string>).detail;
-      setToken(detail || null);
-    }
-
-    window.addEventListener("turnstile-token", onTokenEvt);
-    // เผื่อ callback มาก่อน mount
-    if (window.__TURNSTILE_TOKEN__) {
-      setToken(window.__TURNSTILE_TOKEN__);
-    }
-    return () => window.removeEventListener("turnstile-token", onTokenEvt);
-  }, []);
 
   return (
     <div className="relative">
@@ -147,6 +146,7 @@ export default function Booking() {
             </div>
           </BookContainer>
 
+          {/* ฟอร์ม Order */}
           <BookContainer
             onSubmit={handleSubmit}
             title="Order Details"
@@ -156,6 +156,9 @@ export default function Booking() {
               title: "text-white font-bold text-[2rem]",
               children: "grid w-full gap-5",
             }}
+            // ถ้า BookContainer เป็น <form> ภายใน ให้ส่ง ref ด้วย
+            // @ts-ignore – สมมติ BookContainer ส่งต่อ ref ไปยัง <form>
+            ref={formRef}
           >
             <input
               type="date"
@@ -233,32 +236,16 @@ export default function Booking() {
               ))}
             </div>
 
-            {/* Turnstile: แสดงเฉพาะเมื่อเปิดใช้ */}
+            {/* Turnstile widget + hidden token (ไม่มี Script ในหน้านี้แล้ว) */}
             {ENABLE_TURNSTILE && (
               <>
-                {/* ประกาศ callback ให้พร้อมก่อนโหลด script */}
-                <Script id="turnstile-callback" strategy="afterInteractive">
-                  {`
-                    window.onTurnstile = function (t) {
-                      window.__TURNSTILE_TOKEN__ = t;
-                      window.dispatchEvent(new CustomEvent("turnstile-token", { detail: t }));
-                    };
-                  `}
-                </Script>
-
-                {/* widget */}
                 <div
                   className="cf-turnstile m-auto"
-                  data-sitekey={process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY_BOOKING}
-                  data-callback="onTurnstile"
+                  data-sitekey={SITE_KEY}
+                  data-callback="onTurnstileBooking"
                   data-appearance="always"
-                ></div>
-
-                {/* script ของ Cloudflare */}
-                <Script
-                  src="https://challenges.cloudflare.com/turnstile/v0/api.js"
-                  strategy="afterInteractive"
                 />
+                <input type="hidden" name="cf-turnstile-response" />
               </>
             )}
 

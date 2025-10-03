@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import nodemailer from "nodemailer";
-
+export const runtime = "nodejs";
 export const POST = async (req: NextRequest) => {
   const formData = await req.formData();
 
