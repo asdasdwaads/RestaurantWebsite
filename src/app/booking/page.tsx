@@ -40,7 +40,7 @@ declare global {
   }
 }
 
-type TurnstileTokenEvent = CustomEvent<string>;
+
 // เปิด/ปิด Turnstile จาก env (dev ปิด, prod เปิด)
 const ENABLE_TURNSTILE =
   !!process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY_BOOKING &&
