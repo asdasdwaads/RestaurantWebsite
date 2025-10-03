@@ -56,7 +56,7 @@ export const POST = async (req: NextRequest) => {
 
   const { date, name, email, phone, count, order, service, token } = data;
 
-  const turnstileSecret = process.env.TURNSTILE_SECRET_KEY;
+  const turnstileSecret = process.env.TURNSTILE_SECRET_KEY_BOOKING;
   const isDevBypass =
     process.env.NODE_ENV !== "production" ||
     process.env.TURNSTILE_DISABLE === "1";

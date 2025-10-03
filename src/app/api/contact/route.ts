@@ -10,7 +10,7 @@ export const POST = async (req: NextRequest) => {
   const name = (formData.get("name") as string) || "";
   const subject = (formData.get("subject") as string) || "";
 
-  const secret = process.env.TURNSTILE_SECRET_KEY || "";
+  const secret = process.env.TURNSTILE_SECRET_KEY_CONTACT || "";
   const isDevBypass =
     process.env.NODE_ENV !== "production" ||
     process.env.TURNSTILE_DISABLE === "1";

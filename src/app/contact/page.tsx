@@ -14,7 +14,7 @@ type ContactProps = {
 
 // เปิด/ปิด Turnstile จาก env (dev ปิด, prod เปิด)
 const ENABLE_TURNSTILE =
-  !!process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY &&
+  !!process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY_CONTACT &&
   process.env.NEXT_PUBLIC_TURNSTILE_ENABLE !== "0";
 
 export default function Contact() {
@@ -158,7 +158,7 @@ export default function Contact() {
                 </Script>
                 <div
                   className="cf-turnstile m-auto"
-                  data-sitekey={process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY}
+                  data-sitekey={process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY_CONTACT}
                   data-callback="onTurnstile"
                   data-appearance="always"
                 ></div>

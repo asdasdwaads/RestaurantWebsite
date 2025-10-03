@@ -20,7 +20,7 @@ type FormShape = {
 
 // เปิด/ปิด Turnstile จาก env (dev ปิด, prod เปิด)
 const ENABLE_TURNSTILE =
-  !!process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY &&
+  !!process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY_BOOKING &&
   process.env.NEXT_PUBLIC_TURNSTILE_ENABLE !== "0";
 
 export default function Booking() {
@@ -249,7 +249,7 @@ export default function Booking() {
                 {/* widget */}
                 <div
                   className="cf-turnstile m-auto"
-                  data-sitekey={process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY}
+                  data-sitekey={process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY_BOOKING}
                   data-callback="onTurnstile"
                   data-appearance="always"
                 ></div>
