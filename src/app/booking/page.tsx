@@ -43,7 +43,7 @@ export default function Booking() {
   // ตั้ง callback เฉพาะหน้า Booking และเขียน token ลง hidden input
   useEffect(() => {
     if (!ENABLE_TURNSTILE) return;
-    (window as any).onTurnstileBooking = (t: string) => {
+     window.onTurnstileBooking = (t: string) => {
       const inp = formRef.current?.querySelector<HTMLInputElement>(
         'input[name="cf-turnstile-response"]'
       );

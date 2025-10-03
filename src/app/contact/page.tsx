@@ -28,7 +28,7 @@ export default function Contact() {
 
   useEffect(() => {
     if (!ENABLE_TURNSTILE) return;
-    (window as any).onTurnstileContact = (t: string) => {
+    window.onTurnstileContact = (t: string) => {
       const inp = formRef.current?.querySelector<HTMLInputElement>(
         'input[name="cf-turnstile-response"]'
       );
