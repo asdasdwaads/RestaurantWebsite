@@ -1,6 +1,8 @@
 import { NextResponse, NextRequest } from "next/server";
 import nodemailer from "nodemailer";
 
+export const runtime = "nodejs"; // ใช้ Node.js runtime
+
 type Normalized = {
   date: string;
   name: string;
@@ -22,7 +24,7 @@ async function readAsForm(req: NextRequest) {
     name: get("name"),
     email: get("email"),
     phone: get("phone"),
-    count: get("count") || get("contact"), // เผื่อชื่อเก่า
+    count: get("count") || get("contact"),
     order: get("order"),
     service: get("service") || get("type"),
     token,
@@ -47,7 +49,6 @@ async function readAsJson(req: NextRequest) {
 
 // --------------------- Handler -----------------------
 export const POST = async (req: NextRequest) => {
-  // รองรับทั้ง multipart/form-data และ JSON
   const ctype = req.headers.get("content-type") || "";
   const data: Normalized = ctype.includes("form")
     ? await readAsForm(req)
@@ -55,7 +56,6 @@ export const POST = async (req: NextRequest) => {
 
   const { date, name, email, phone, count, order, service, token } = data;
 
-  // Bypass Turnstile บน dev หรือเมื่อสั่งปิดด้วย env
   const turnstileSecret = process.env.TURNSTILE_SECRET_KEY;
   const isDevBypass =
     process.env.NODE_ENV !== "production" ||
@@ -87,14 +87,12 @@ export const POST = async (req: NextRequest) => {
     }
   }
 
-  // Nodemailer transporter (เลือก: SMTP_* หรือ Gmail service)
   const {
     SMTP_HOST,
     SMTP_PORT,
     SMTP_SECURE,
     SMTP_USER,
     SMTP_PASS,
-    EMAIL_SERVICE,
     EMAIL_FROM,
     EMAIL_TO,
     EMAIL_RECEIVER,
@@ -102,24 +100,23 @@ export const POST = async (req: NextRequest) => {
     EMAIL_PASS,
   } = process.env;
 
-  const transporter =
-    SMTP_HOST
-      ? nodemailer.createTransport({
-          host: SMTP_HOST,
-          port: Number(SMTP_PORT ?? 587),
-          secure: String(SMTP_SECURE ?? "false") === "true",
-          auth:
-            SMTP_USER && SMTP_PASS
-              ? { user: SMTP_USER, pass: SMTP_PASS }
-              : undefined,
-        })
-      : nodemailer.createTransport({
-          service: EMAIL_SERVICE || "gmail",
-          auth: {
-            user: EMAIL_USER,
-            pass: EMAIL_PASS,
-          },
-        });
+
+  const transporter = SMTP_HOST
+    ? nodemailer.createTransport({
+        host: SMTP_HOST,
+        port: Number(SMTP_PORT ?? 587),
+        secure: String(SMTP_SECURE ?? "false") === "true",
+        auth: SMTP_USER && SMTP_PASS ? { user: SMTP_USER, pass: SMTP_PASS } : undefined,
+      })
+    : nodemailer.createTransport({
+        host: "smtp.gmail.com",
+        port: 465,
+        secure: true,
+        auth: {
+          user: EMAIL_USER,
+          pass: EMAIL_PASS,
+        },
+      });
 
   const toAddress = EMAIL_TO || EMAIL_RECEIVER;
   const fromAddress =
@@ -159,6 +156,7 @@ export const POST = async (req: NextRequest) => {
   };
 
   try {
+    await transporter.verify(); // <— เพิ่ม verify เพื่อ debug auth
     await transporter.sendMail(mailOptions);
     return NextResponse.json(
       { success: true, message: "Email sent successfully!" },
