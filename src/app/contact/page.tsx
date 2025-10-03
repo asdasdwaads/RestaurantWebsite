@@ -10,6 +10,12 @@ type ContactForm = {
   message?: string;
 };
 
+declare global {
+  interface Window {
+    onTurnstileContact?: (t: string) => void;
+  }
+}
+
 const SITE_KEY = process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY_CONTACT!;
 const ENABLE_TURNSTILE =
   !!SITE_KEY && process.env.NEXT_PUBLIC_TURNSTILE_ENABLE !== "0";

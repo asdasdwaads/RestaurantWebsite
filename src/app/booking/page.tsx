@@ -20,6 +20,13 @@ const SITE_KEY = process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY_BOOKING!;
 const ENABLE_TURNSTILE =
   !!SITE_KEY && process.env.NEXT_PUBLIC_TURNSTILE_ENABLE !== "0";
 
+declare global {
+  interface Window {
+    onTurnstileBooking?: (t: string) => void;
+  }
+}
+
+
 export default function Booking() {
   const services = [
     { label: "Eat at restaurant", htmlFor: "restaurant", id: "restaurant" },
