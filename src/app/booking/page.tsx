@@ -20,23 +20,25 @@ type FormShape = {
 };
 declare global {
   interface Window {
+    
     onTurnstileBooking?: (token: string) => void;
     __TURNSTILE_BOOKING_TOKEN__?: string;
+    __loadTurnstileBooking__?: () => void;
 
 
     turnstile?: {
-      render: (el: HTMLElement, opts: {
-        sitekey: string;
-        callback: (token: string) => void;
-        appearance?: "always" | "execute" | "interaction-only";
-        "refresh-expired"?: "auto" | "manual";
-      }) => string; // widgetId
-      reset: (id?: string) => void;
-      remove: (id: string) => void;
+      render?: (
+        el: HTMLElement,
+        opts: {
+          sitekey: string;
+          callback: (token: string) => void;
+          appearance?: "always" | "execute" | "interaction-only";
+          "refresh-expired"?: "auto" | "manual";
+        }
+      ) => string;
+      reset?: (id?: string) => void;
+      remove?: (id: string) => void;
     };
-
-
-    __loadTurnstileBooking__?: () => void;
   }
 }
 
