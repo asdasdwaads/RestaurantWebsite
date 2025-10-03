@@ -5,8 +5,6 @@ import "./globals.css";
 import { Navbar } from "@/components/Navbar";
 import { Footer } from "@/components/Footer";
 
-import Script from "next/script";
-
 const poppins = Poppins({
   weight: ['400', '600'],
   subsets: ['latin'],
@@ -35,11 +33,6 @@ export default function RootLayout({
         <footer>
           <Footer />
         </footer>
-        {/* โหลด Turnstile script แค่ครั้งเดียวสำหรับทั้งแอป */}
-        <Script
-          src="https://challenges.cloudflare.com/turnstile/v0/api.js"
-          strategy="afterInteractive"
-        />
       </body>
     </html>
   );
