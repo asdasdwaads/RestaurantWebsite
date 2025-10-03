@@ -71,13 +71,18 @@ export default function Booking() {
       // reset turnstile ถ้าเปิดใช้
       if (ENABLE_TURNSTILE) {
         try {
-          // @ts-ignore
           if (window.turnstile?.reset) window.turnstile.reset();
           setToken(null);
         } catch {}
       }
-    } catch (err: any) {
-      setMessage(`${err.message || "Send failed"}`);
+    } catch (err) {
+      const errorMessage =
+        err instanceof Error
+          ? err.message
+          : typeof err === "string"
+          ? err
+          : "Send failed";
+      setMessage(errorMessage);
     } finally {
       setSubmitting(false);
     }
@@ -94,9 +99,7 @@ export default function Booking() {
 
     window.addEventListener("turnstile-token", onTokenEvt);
     // เผื่อ callback มาก่อน mount
-    // @ts-ignore
     if (window.__TURNSTILE_TOKEN__) {
-      // @ts-ignore
       setToken(window.__TURNSTILE_TOKEN__);
     }
     return () => window.removeEventListener("turnstile-token", onTokenEvt);

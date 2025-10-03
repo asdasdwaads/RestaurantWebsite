@@ -50,14 +50,19 @@ export default function Contact() {
       setMsg("Message sent! Thank you.");
       setForm({});
       if (ENABLE_TURNSTILE) {
-        // @ts-ignore
         if (window.turnstile?.reset) window.turnstile.reset();
         setToken(null);
       }
       // เคลียร์อินพุต (ค่าผูกกับ state จะถูกเคลียร์เอง)
       (event.target as HTMLFormElement).reset();
-    } catch (err: any) {
-      setMsg(`${err.message || "Send failed"}`);
+    } catch (err) {
+      const errorMessage =
+        err instanceof Error
+          ? err.message
+          : typeof err === "string"
+            ? err
+            : "Send failed";
+      setMsg(errorMessage);
     } finally {
       setSubmitting(false);
     }
@@ -71,9 +76,7 @@ export default function Contact() {
       setToken(detail || null);
     }
     window.addEventListener("turnstile-token", onTokenEvt);
-    // @ts-ignore
     if (window.__TURNSTILE_TOKEN__) {
-      // @ts-ignore
       setToken(window.__TURNSTILE_TOKEN__);
     }
     return () => window.removeEventListener("turnstile-token", onTokenEvt);

@@ -159,7 +159,7 @@ export const POST = async (req: NextRequest) => {
   };
 
   try {
-    await transporter.sendMail(mailOptions as any);
+    await transporter.sendMail(mailOptions);
     return NextResponse.json(
       { success: true, message: "Email sent successfully!" },
       { status: 201 }
