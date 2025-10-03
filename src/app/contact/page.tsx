@@ -71,8 +71,9 @@ export default function Contact() {
         'input[name="cf-turnstile-response"]'
       );
       if (inp) inp.value = "";
-    } catch (err: any) {
-      setMsg(`❌ ${err.message || "Send failed"}`);
+    } catch (err: unknown) {
+      const msg = err instanceof Error ? err.message : typeof err === "string" ? err : "Send failed";
+      setMsg(`❌ ${msg}`);
     } finally {
       setSubmitting(false);
     }
