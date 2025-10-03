@@ -52,7 +52,7 @@ export const POST = async (req: NextRequest) => {
     EMAIL_SERVICE,
     EMAIL_USER,
     EMAIL_PASS,
-    EMAIL_FROM,
+    EMAIL_FROM_CONTACT,
     EMAIL_TO,
     EMAIL_RECEIVER,
   } = process.env;
@@ -78,7 +78,7 @@ export const POST = async (req: NextRequest) => {
 
   const toAddress = EMAIL_TO || EMAIL_RECEIVER;
   const fromAddress =
-    EMAIL_FROM || (EMAIL_USER ? `"Feedback Bot" <${EMAIL_USER}>` : undefined);
+    EMAIL_FROM_CONTACT || (EMAIL_USER ? `"Feedback Bot" <${EMAIL_USER}>` : undefined);
 
   const mailOptions = {
     from: fromAddress,

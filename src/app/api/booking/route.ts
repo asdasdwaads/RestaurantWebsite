@@ -93,7 +93,7 @@ export const POST = async (req: NextRequest) => {
     SMTP_SECURE,
     SMTP_USER,
     SMTP_PASS,
-    EMAIL_FROM,
+    EMAIL_FROM_BOOKING,
     EMAIL_TO,
     EMAIL_RECEIVER,
     EMAIL_USER,
@@ -120,7 +120,7 @@ export const POST = async (req: NextRequest) => {
 
   const toAddress = EMAIL_TO || EMAIL_RECEIVER;
   const fromAddress =
-    EMAIL_FROM || (EMAIL_USER ? `"Booking Bot" <${EMAIL_USER}>` : undefined);
+    EMAIL_FROM_BOOKING || (EMAIL_USER ? `"Booking Bot" <${EMAIL_USER}>` : undefined);
 
   const mailOptions = {
     from: fromAddress,
