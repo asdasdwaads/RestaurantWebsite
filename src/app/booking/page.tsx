@@ -164,7 +164,7 @@ export default function Booking() {
               children: "grid w-full gap-5",
             }}
             // ถ้า BookContainer เป็น <form> ภายใน ให้ส่ง ref ด้วย
-            // @ts-ignore – สมมติ BookContainer ส่งต่อ ref ไปยัง <form>
+            // @ts-expect-error – สมมติ BookContainer ส่งต่อ ref ไปยัง <form>
             ref={formRef}
           >
             <input

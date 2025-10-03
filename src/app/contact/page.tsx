@@ -81,7 +81,7 @@ export default function Contact() {
 
   return (
     <ContactContainer
-      // @ts-ignore — ให้ส่ง ref ลงไปยัง <form> ภายในคอมโพเนนต์
+      // @ts-expect-error — ให้ส่ง ref ลงไปยัง <form> ภายในคอมโพเนนต์
       ref={formRef}
       title="Feedback"
       styles={{
