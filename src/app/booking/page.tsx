@@ -35,7 +35,6 @@ const ENABLE_TURNSTILE =
 export default function Booking() {
   const widgetRootRef = useRef<HTMLDivElement | null>(null);
   const widgetIdRef = useRef<string | null>(null);
-  const scriptLoadedRef = useRef(false);
   
   const services = [
     { label: "Eat at restaurant", htmlFor: "restaurant", id: "restaurant" },

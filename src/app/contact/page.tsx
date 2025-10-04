@@ -29,7 +29,6 @@ const ENABLE_TURNSTILE =
 export default function Contact() {
   const widgetRootRef = useRef<HTMLDivElement | null>(null);
   const widgetIdRef = useRef<string | null>(null);
-  const scriptLoadedRef = useRef(false);
   
   const [form, setForm] = useState<ContactProps>({});
   const [token, setToken] = useState<string | null>(null);
