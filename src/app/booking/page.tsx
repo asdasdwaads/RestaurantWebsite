@@ -32,6 +32,9 @@ const ENABLE_TURNSTILE =
   !!process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY_BOOKING &&
   process.env.NEXT_PUBLIC_TURNSTILE_ENABLE !== "0";
 
+
+
+  
 export default function Booking() {
   const widgetRootRef = useRef<HTMLDivElement | null>(null);
   const widgetIdRef = useRef<string | null>(null);
@@ -46,6 +49,15 @@ export default function Booking() {
   const [token, setToken] = useState<string | null>(null);
   const [submitting, setSubmitting] = useState(false);
   const [message, setMessage] = useState<string | null>(null);
+
+  const [todayAt] = useState(() =>
+  new Intl.DateTimeFormat("en-CA", {
+    timeZone: "Europe/Vienna",
+    year: "numeric",
+    month: "2-digit",
+    day: "2-digit",
+  }).format(new Date())
+);
 
   const handleOnChange = (
     event: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
@@ -209,6 +221,7 @@ export default function Booking() {
             <input
               type="date"
               name="date"
+              min={todayAt}
               className="bg-white w-full h-[40px] rounded-[10px] px-2"
               required
               onChange={handleOnChange}
