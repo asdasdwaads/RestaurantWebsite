@@ -223,6 +223,7 @@ export default function Booking() {
               name="date"
               required
               min={todayAt}
+              className="bg-white w-full h-[40px] rounded-[10px] px-2"
               value={form.date ?? ""}
               onFocus={(e) => { e.currentTarget.min = todayAt; }}
               onClick={(e) => { e.currentTarget.min = todayAt; }}
