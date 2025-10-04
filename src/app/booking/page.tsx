@@ -221,11 +221,21 @@ export default function Booking() {
             <input
               type="date"
               name="date"
-              min={todayAt}
-              className="bg-white w-full h-[40px] rounded-[10px] px-2"
               required
-              onChange={handleOnChange}
-              value={form.date || ""}
+              min={todayAt}
+              value={form.date ?? ""}
+              onFocus={(e) => { e.currentTarget.min = todayAt; }}
+              onClick={(e) => { e.currentTarget.min = todayAt; }}
+              onChange={(e) => {
+                
+                if (e.target.value && e.target.value < todayAt) {
+                  e.target.value = todayAt;
+                  setForm((p) => ({ ...p, date: todayAt }));
+                  setMessage("Please pick today or a future date.");
+                  return;
+                }
+                handleOnChange(e);
+              }}
             />
             <input
               type="text"
