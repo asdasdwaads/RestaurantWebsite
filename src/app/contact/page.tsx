@@ -158,7 +158,7 @@ export default function Contact() {
           <ContactContainer
             title="Feedback"
             styles={{
-              container: "w-full",
+              container: "w-[300px] smartphone:w-[400px] y-tablet:w-[500px] justify-between overflow-hidden",
               title: "text-white font-bold text-[2rem]",
               children: "grid w-full gap-5 max-w-full overflow-x-hidden",
             }}
