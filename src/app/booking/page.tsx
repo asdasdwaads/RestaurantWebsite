@@ -329,7 +329,7 @@ export default function Booking() {
                           var root = document.getElementById("turnstile-booking-root");
                           if (!root || !window.turnstile) return;
                           if (root.getAttribute("data-rendered") === "1") return;
-                          var size = (window.innerWidth <= 380) ? "compact" : "normal";
+                          var size = (window.innerWidth <= 450) ? "compact" : "normal";
                           var id = window.turnstile.render(root, {
                             sitekey: "${process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY_BOOKING ?? ""}",
                             callback: function (t) { window.onTurnstileBooking && window.onTurnstileBooking(t); },
