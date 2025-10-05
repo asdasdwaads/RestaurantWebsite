@@ -223,7 +223,7 @@ export default function Contact() {
                           var root = document.getElementById("turnstile-contact-root");
                           if (!root || !window.turnstile) return;
                           if (root.getAttribute("data-rendered") === "1") return;
-                          return;
+
 
                           var id = window.turnstile.render(root, {
                             sitekey: "${process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY_CONTACT ?? ""}",
