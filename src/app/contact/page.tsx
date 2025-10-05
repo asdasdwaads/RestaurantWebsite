@@ -160,7 +160,7 @@ export default function Contact() {
             styles={{
               container: "w-full h-screen x-tablet:h-[80vh]",
               title: "text-white font-bold text-[2rem]",
-              children: "grid w-full gap-5",
+              children: "grid w-full gap-5 w-full max-w-full overflow-x-hidden",
             }}
             onSubmit={handleSendEmail}
           >
@@ -246,7 +246,7 @@ export default function Contact() {
                 <div 
                   id="turnstile-contact-root" 
                   ref={widgetRootRef} 
-                  className="cf-turnstile m-auto w-full max-w-full overflow-hidden" 
+                  className="cf-turnstile mx-auto w-full max-w-[280px] smartphone:max-w-[350px] y-tablet:max-w-[420px] bg-white rounded-[10px] p-2 flex items-center justify-center"
                 />
               </>
             )}
