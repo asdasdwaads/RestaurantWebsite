@@ -222,7 +222,12 @@ export default function Contact() {
                         try {
                           var root = document.getElementById("turnstile-contact-root");
                           if (!root || !window.turnstile) return;
-                          if (root.getAttribute("data-rendered") === "1") return;
+                          if (root.getAttribute("data-rendered") === "1") {
+                            try {
+                              window.turnstile.reset(root.getAttribute("data-widget-id"));
+                            } catch (e) { }
+                          }
+                          return;
 
                           var id = window.turnstile.render(root, {
                             sitekey: "${process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY_CONTACT ?? ""}",
@@ -247,7 +252,7 @@ export default function Contact() {
                 <div 
                   id="turnstile-contact-root" 
                   ref={widgetRootRef} 
-                  className="cf-turnstile w-full h-[65px] overflow-hidden"
+                  className="cf-turnstile w-full min-h-[72px]"
                 />
               </>
             )}
