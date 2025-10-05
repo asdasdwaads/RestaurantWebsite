@@ -329,13 +329,13 @@ export default function Booking() {
                           var root = document.getElementById("turnstile-booking-root");
                           if (!root || !window.turnstile) return;
                           if (root.getAttribute("data-rendered") === "1") return;
-
+                          var size = (window.innerWidth <= 380) ? "compact" : "normal";
                           var id = window.turnstile.render(root, {
                             sitekey: "${process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY_BOOKING ?? ""}",
                             callback: function (t) { window.onTurnstileBooking && window.onTurnstileBooking(t); },
                             appearance: "always",
                             "refresh-expired": "auto",
-                            size: "flexible"
+                            size: size
                           });
                           root.setAttribute("data-rendered", "1");
                           root.setAttribute("data-widget-id", id);
@@ -348,7 +348,7 @@ export default function Booking() {
                 <div
                   id="turnstile-booking-root"
                   ref={widgetRootRef}
-                  className="cf-turnstile m-auto w-full max-w-full overflow-hidden"
+                  className="cf-turnstile m-auto w-full max-w-full overflow-hidden flex justify-center"
                 />
 
                 <Script
