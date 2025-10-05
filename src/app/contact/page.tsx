@@ -224,13 +224,14 @@ export default function Contact() {
                           if (!root || !window.turnstile) return;
                           if (root.getAttribute("data-rendered") === "1") return;
 
+                          var size = (window.innerWidth <= 380) ? "compact" : "normal";
 
                           var id = window.turnstile.render(root, {
                             sitekey: "${process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY_CONTACT ?? ""}",
                             callback: function (t) { window.onTurnstileContact && window.onTurnstileContact(t); },
                             appearance: "always",
                             "refresh-expired": "auto",
-                            size: "normal"
+                            size: size
                           });
                           root.setAttribute("data-rendered", "1");
                           root.setAttribute("data-widget-id", id);
@@ -248,7 +249,7 @@ export default function Contact() {
                 <div 
                   id="turnstile-contact-root" 
                   ref={widgetRootRef} 
-                  className="cf-turnstile m-auto w-full max-w-full min-h-[78px] rounded-[10px] overflow-hidden"
+                  className="cf-turnstile m-auto w-full max-w-full rounded-[10px] overflow-hidden"
                 />
               </>
             )}
