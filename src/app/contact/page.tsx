@@ -154,7 +154,7 @@ export default function Contact() {
           />
         </div>
 
-        <div className="w-[300px] smartphone:w-[400px] y-tablet:w-[500px]">
+        <div className="w-[300px] smartphone:w-[400px] y-tablet:w-[500px] justify-between overflow-hidden">
           <ContactContainer
             title="Feedback"
             styles={{
@@ -246,7 +246,7 @@ export default function Contact() {
                 <div 
                   id="turnstile-contact-root" 
                   ref={widgetRootRef} 
-                  className="cf-turnstile m-auto" 
+                  className="cf-turnstile m-auto w-full max-w-full overflow-hidden" 
                 />
               </>
             )}

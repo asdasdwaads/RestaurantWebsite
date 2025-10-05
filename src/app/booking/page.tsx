@@ -347,7 +347,7 @@ export default function Booking() {
                 <div
                   id="turnstile-booking-root"
                   ref={widgetRootRef}
-                  className="cf-turnstile mx-auto w-full max-w-[280px] smartphone:max-w-[350px] y-tablet:max-w-[420px] bg-white rounded-[10px] p-2 flex justify-center items-center"
+                  className="cf-turnstile m-auto w-full max-w-full overflow-hidden"
                 />
 
                 <Script
