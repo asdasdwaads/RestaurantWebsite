@@ -222,11 +222,7 @@ export default function Contact() {
                         try {
                           var root = document.getElementById("turnstile-contact-root");
                           if (!root || !window.turnstile) return;
-                          if (root.getAttribute("data-rendered") === "1") {
-                            try {
-                              window.turnstile.reset(root.getAttribute("data-widget-id"));
-                            } catch (e) { }
-                          }
+                          if (root.getAttribute("data-rendered") === "1") return;
                           return;
 
                           var id = window.turnstile.render(root, {
