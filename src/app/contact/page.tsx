@@ -154,13 +154,13 @@ export default function Contact() {
           />
         </div>
 
-        <div className="w-[300px] smartphone:w-[400px] y-tablet:w-[500px] justify-between overflow-hidden">
+        <div className="w-[300px] smartphone:w-[400px] y-tablet:w-[500px]">
           <ContactContainer
             title="Feedback"
             styles={{
-              container: "w-full h-screen x-tablet:h-[80vh]",
+              container: "w-full",
               title: "text-white font-bold text-[2rem]",
-              children: "grid w-full gap-5 w-full max-w-full overflow-x-hidden",
+              children: "grid w-full gap-5 max-w-full overflow-x-hidden",
             }}
             onSubmit={handleSendEmail}
           >
@@ -228,7 +228,8 @@ export default function Contact() {
                             sitekey: "${process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY_CONTACT ?? ""}",
                             callback: function (t) { window.onTurnstileContact && window.onTurnstileContact(t); },
                             appearance: "always",
-                            "refresh-expired": "auto"
+                            "refresh-expired": "auto",
+                            size: "flexible"
                           });
                           root.setAttribute("data-rendered", "1");
                           root.setAttribute("data-widget-id", id);
@@ -246,7 +247,7 @@ export default function Contact() {
                 <div 
                   id="turnstile-contact-root" 
                   ref={widgetRootRef} 
-                  className="cf-turnstile mx-auto w-full max-w-[280px] smartphone:max-w-[350px] y-tablet:max-w-[420px] bg-white rounded-[10px] p-2 flex items-center justify-center"
+                  className="cf-turnstile w-full bg-white rounded-[10px] overflow-hidden"
                 />
               </>
             )}

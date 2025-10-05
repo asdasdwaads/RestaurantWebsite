@@ -334,7 +334,8 @@ export default function Booking() {
                             sitekey: "${process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY_BOOKING ?? ""}",
                             callback: function (t) { window.onTurnstileBooking && window.onTurnstileBooking(t); },
                             appearance: "always",
-                            "refresh-expired": "auto"
+                            "refresh-expired": "auto",
+                            size: "flexible"
                           });
                           root.setAttribute("data-rendered", "1");
                           root.setAttribute("data-widget-id", id);
