@@ -158,9 +158,9 @@ export default function Contact() {
           <ContactContainer
             title="Feedback"
             styles={{
-              container: "w-[300px] smartphone:w-[400px] y-tablet:w-[500px] justify-between ",
+              container: "w-[300px] smartphone:w-[400px] y-tablet:w-[500px] justify-between",
               title: "text-white font-bold text-[2rem]",
-              children: "grid w-full gap-5 max-w-full overflow-x-hidden",
+              children: "grid w-full gap-5 max-w-full",
             }}
             onSubmit={handleSendEmail}
           >
@@ -245,13 +245,11 @@ export default function Contact() {
                   strategy="afterInteractive"
                 />
 
-                <div className="w-full bg-white rounded-[10px]">
-                 <div 
+                <div 
                   id="turnstile-contact-root" 
                   ref={widgetRootRef} 
                   className="cf-turnstile w-full min-h-[78px] max-w-full"
-                  /> 
-                </div>
+                />
               </>
             )}
 
