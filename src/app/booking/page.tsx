@@ -213,9 +213,9 @@ export default function Booking() {
             title="Order Details"
             styles={{
               container:
-                "w-[300px] smartphone:w-[400px] y-tablet:w-[500px] justify-between",
+                "w-[300px] smartphone:w-[400px] y-tablet:w-[500px] justify-between overflow-hidden",
               title: "text-white font-bold text-[2rem]",
-              children: "grid w-full gap-5",
+              children: "grid w-full gap-5 grid w-full gap-5 overflow-y-auto max-h-[520px] y-tablet:max-h-[600px]",
             }}
           >
             <input
@@ -347,7 +347,7 @@ export default function Booking() {
                 <div
                   id="turnstile-booking-root"
                   ref={widgetRootRef}
-                  className="cf-turnstile m-auto"
+                  className="cf-turnstile m-auto w-full max-w-full"
                 />
 
                 <Script
