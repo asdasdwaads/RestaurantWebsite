@@ -247,7 +247,7 @@ export default function Contact() {
                 <div 
                   id="turnstile-contact-root" 
                   ref={widgetRootRef} 
-                  className="cf-turnstile w-full bg-white rounded-[10px] overflow-hidden"
+                  className="cf-turnstile w-full h-[65px] overflow-hidden"
                 />
               </>
             )}
