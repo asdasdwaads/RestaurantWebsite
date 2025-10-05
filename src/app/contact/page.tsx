@@ -230,7 +230,7 @@ export default function Contact() {
                             callback: function (t) { window.onTurnstileContact && window.onTurnstileContact(t); },
                             appearance: "always",
                             "refresh-expired": "auto",
-                            size: "flexible"
+                            size: "normal"
                           });
                           root.setAttribute("data-rendered", "1");
                           root.setAttribute("data-widget-id", id);
