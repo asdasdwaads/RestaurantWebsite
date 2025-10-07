@@ -150,7 +150,7 @@ export default function Contact() {
         <div className="w-[300px] smartphone:w-[400px] y-tablet:w-[500px] h-[60vh] smartphone:h-[80vh]">
           <iframe
             className="w-full h-full rounded-[10px]"
-            src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d675.441249820311!2d15.094200543816525!3d47.377504924512905!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x4771df8f52936ca5%3A0xec94f616321ecf92!2sCharm%20Thai%20Restaurant!5e0!3m2!1sth!2sth!4v1758546578365!5m2!1sth!2sth"
+            src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d675.4347165632298!2d15.094453616625984!3d47.378014935141636!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x4771df8f52936ca5%3A0xec94f616321ecf92!2sCharm%20Thai%20Restaurant!5e0!3m2!1sen!2sat!4v1759858533840!5m2!1sen!2sat"
           />
         </div>
 
